@@ -304,9 +304,10 @@
                         <div class="type_msg">
                             <div class="input_msg_write">
                                 <input type="text" v-model="message" class="write_msg"
-                                    placeholder="@{{user.username}} says" />
+                                placeholder="@{{user.username}} says" />                                 
                                 <button class="msg_send_btn" type="button" v-on:click="sendMessage">
-                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                    <i v-if="!sendingMessage" class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                    <span v-if="sendingMessage" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 </button>
                             </div>
                         </div>
@@ -332,15 +333,18 @@
             data: {
                 username: '{{user.username}}',
                 message: '',
-                chat: null
+                chat: null,
+                sendingMessage: false 
             },
             methods: {
                 sendMessage: function () {
+                    this.sendingMessage = true;
                     axios.post('/send/', {
                         username: this.username,
                         message: this.message
                     }).then(response => {
                         this.message = "";
+                        this.sendingMessage = false;
                     });
                 },
                 getMessages: function () {
