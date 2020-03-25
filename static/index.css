@@ -1,0 +1,15 @@
+.initial
+{
+width: 2%;
+height: 10%;
+}
+.spinner-grow
+{
+    display: none !important;
+}
+.bot
+{
+    border-color: wheat;
+    height: 30px;
+    font-size: 10px;
+}
