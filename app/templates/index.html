@@ -9,8 +9,7 @@
     <link rel="shortcut icon" href="{% static 'handshake-solid.svg' %}">
     <link rel="stylesheet" href="{% static 'index.css' %}" type="text/css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css"
-        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -239,8 +238,8 @@
     <div id="chat-app">
         <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: rgba(255,255,255,0.5);">
             <a class="navbar-brand" href="#">Let's Chat</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -255,10 +254,9 @@
                 <form class="form-inline my-2 my-lg-0">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown active">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=fff&size=36"
-                                    class="rounded-circle"> {{user.first_name}} {{user.last_name}}
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=fff&size=36" class="rounded-circle"> {{user.first_name}} {{user.last_name}}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/logout">Logout</a>
@@ -288,11 +286,11 @@
                                 </div>
                                 <div v-else class="incoming_msg" style="padding-bottom:12px;">
                                     <div class="incoming_msg_img">
-                                        <img :src="avatarUrl(chat_message.first_name,chat_message.last_name)"
-                                            alt="Avatar"> </div>
+                                        <img :src="avatarUrl(chat_message.first_name,chat_message.last_name)" alt="Avatar"> </div>
                                     <div class="received_msg">
                                         <div class="received_withd_msg">
-                                            <p> <span style="color: #05728f;" :title="getFullName(chat_message.first_name,chat_message.last_name)">@${chat_message.username}</span>
+                                            <p>
+                                                <span style="color: #05728f;" :title="getFullName(chat_message.first_name,chat_message.last_name)">@${chat_message.username}</span>
                                                 ${chat_message.message}
                                             </p>
                                             <span class="time_date"> ${chat_message.time} | ${chat_message.date}</span>
@@ -303,8 +301,7 @@
                         </div>
                         <div class="type_msg">
                             <div class="input_msg_write">
-                                <input type="text" v-model="message" class="write_msg"
-                                placeholder="@{{user.username}} says" />                                 
+                                <input type="text" v-model="message" class="write_msg" placeholder="@{{user.username}} says" />
                                 <button class="msg_send_btn" type="button" v-on:click="sendMessage">
                                     <i v-if="!sendingMessage" class="fa fa-paper-plane-o" aria-hidden="true"></i>
                                     <span v-if="sendingMessage" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -334,18 +331,22 @@
                 username: '{{user.username}}',
                 message: '',
                 chat: null,
-                sendingMessage: false 
+                sendingMessage: false
             },
             methods: {
                 sendMessage: function () {
-                    this.sendingMessage = true;
-                    axios.post('/send/', {
-                        username: this.username,
-                        message: this.message
-                    }).then(response => {
-                        this.message = "";
-                        this.sendingMessage = false;
-                    });
+                    if (this.message.trim() !== "") {
+                        this.sendingMessage = true;
+                        axios.post('/send/', {
+                            username: this.username,
+                            message: this.message.trim()
+                        }).then(response => {
+                            this.message = "";
+                            this.sendingMessage = false;
+                        });
+                    } else {
+                        this.message = ""; 
+                    } 
                 },
                 getMessages: function () {
                     axios.get('/get/').then(
@@ -357,7 +358,7 @@
                 avatarUrl: function (first_name, last_name) {
                     return "https://ui-avatars.com/api/?name=" + first_name + "+" + last_name + "&background=f1f2f3&size=64&rounded=true";
                 },
-                getFullName: function(first_name, last_name) {
+                getFullName: function (first_name, last_name) {
                     return first_name + " " + last_name;
                 }
             },
